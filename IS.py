@@ -38,7 +38,7 @@ def EnterAsUser(login, password):
         print(Fore.GREEN + " Вы авторизировались как покупатель !")
         print(Fore.RESET)
         userCursor.close()
-        main()
+        #UserInterface()
     else:
         EnterAsAdmin(login, password)
 
@@ -152,6 +152,7 @@ def GetPapperPrice():
 
     return papper1Price, papper2Price, papper3Price
 
+
 def GetSpicesPrice():
     spicesPriceQ = "select [Specties_1price] from [dbo].[Products] inner join dbo.[Products_Price] on [Products_Price_ID] = [ID_Products]"
     spices1PriceC = connection.cursor()
@@ -238,7 +239,7 @@ def GetMeatPrice():
 def RiceType():
     print(" Раздел: Рис ")
     rice1Price, rice2Price, rice3Price = GetRicePrice()
-    riceType = float(input(f" Выберите сорт риса: \n"
+    riceType = int(input(f" Выберите сорт риса: \n"
                          f"   1. Басмати - {rice1Price} руб\n"
                          f"   2. Жасмин - {rice2Price} руб\n"
                          f"   3. Длиннозерный рис - {rice3Price} руб\n"
@@ -567,15 +568,15 @@ def SetCarrotPrice():
                          f"   3. Русская - {carrot3Price} руб\n"
                          f"   0. Выход \n"))
     if meatType == 1:
-        kgValue = float(input(" Введитье новую цену Корейской моркови в (руб): "))
+        kgValue = int(input(" Введитье новую цену Корейской моркови в (руб): "))
         name = "Корейская"
         return kgValue, name
     elif meatType == 2:
-        kgValue = float(input(" Введитье новую цену красной моркови (руб): "))
+        kgValue = int(input(" Введитье новую цену красной моркови (руб): "))
         name = "Красная"
         return kgValue, name
     elif meatType == 3:
-        kgValue = float(input(" Введитье новую цену Русской моркови (руб): "))
+        kgValue = int(input(" Введитье новую цену Русской моркови (руб): "))
         name = "Русская"
         return kgValue, name
     elif meatType == 4:
@@ -660,7 +661,7 @@ selectProductsPrices = {'ID_Products_Price': 1, 'Rice_1price': 0, 'Rice_2price':
                     'Fruit_1price': 0, 'Fruit_2price': 0, 'Fruit_3price': 0, 'Specties_1price': 0, 'Specties_2price': 0, 'Specties_3price': 0,
                     'Papper_1price': 0, 'Papper_2price': 0, 'Papper_3price': 0, 'Tea_1price': 0, 'Tea_2price': 0, 'Tea_3price': 0}
 
-def GetPriceFromDB():
+def GetPriceFromDB(selectProductsPrices):
     prodListCursor = connection.cursor()
     prodListCursor.execute("select * from [dbo].[Products_Price]")
     for row in prodListCursor.fetchall():
@@ -818,8 +819,8 @@ def GetAdminBalance():
     return balanceRecord
 
 
-price = array('i', [])
-currentBalance = array('i', [0])
+price = [1]
+currentBalance = [1]
 
 
 def AdminChangesPrices():
@@ -837,7 +838,7 @@ def AdminChangesPrices():
         if productCategory == 0:
             print(
                 Fore.GREEN + f" Цена изменена " + Fore.WHITE)
-            list = GetPriceFromDB(selectProductsPrices)
+            list = GetPriceFromDB(productCategory)
             SetAllProductsPrice(list)
         elif productCategory == 1:
             rubRice, name = SetRicePrice()
